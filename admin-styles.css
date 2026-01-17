@@ -47,6 +47,19 @@
     letter-spacing: 1px;
 }
 
+.back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.back-link:hover {
+    color: var(--accent);
+    transform: translateX(-5px);
+}
+
 .password-input-wrapper {
     position: relative;
     display: flex;
@@ -55,29 +68,44 @@
 
 .password-input-wrapper input {
     width: 100%;
-    padding-right: 50px;
+    padding-right: 55px;
 }
 
 .password-toggle {
     position: absolute;
-    right: 10px;
+    right: 5px;
     background: transparent;
-    border: none;
+    border: 1px solid rgba(233, 69, 96, 0.3);
     cursor: pointer;
-    padding: 8px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
 }
 
 .password-toggle:hover {
-    transform: scale(1.1);
+    background: rgba(233, 69, 96, 0.1);
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.password-toggle:active {
+    transform: scale(0.95);
 }
 
 .eye-icon {
-    font-size: 20px;
+    font-size: 18px;
     user-select: none;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover .eye-icon {
+    opacity: 1;
 }
 
 .error-message {
@@ -107,6 +135,25 @@
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 1px;
+}
+
+.back-site-btn {
+    padding: 10px 25px;
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.back-site-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
 }
 
 .logout-btn {
@@ -585,6 +632,10 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
+    }
+    
+    .admin-header > div {
+        flex-wrap: wrap;
     }
     
     .stats-grid {
