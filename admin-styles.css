@@ -47,28 +47,45 @@
     letter-spacing: 1px;
 }
 
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 50px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+    transform: scale(1.1);
+}
+
+.eye-icon {
+    font-size: 20px;
+    user-select: none;
+}
+
 .error-message {
     color: var(--accent);
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
     min-height: 20px;
-}
-
-.back-link {
-    display: block;
-    text-align: center;
-    margin-top: 25px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-}
-
-.back-link:hover {
-    color: var(--accent);
-    transform: translateX(-5px);
 }
 
 .admin-panel {
@@ -211,6 +228,13 @@
     }
 }
 
+.filter-info {
+    background: var(--secondary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(233, 69, 96, 0.1);
+}
+
 .table-container {
     overflow-x: auto;
     margin-top: 30px;
@@ -262,6 +286,7 @@
     border-radius: 5px;
     font-size: 14px;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .delete-btn:hover {
@@ -582,6 +607,7 @@
     .data-table th,
     .data-table td {
         padding: 12px;
+        font-size: 13px;
     }
     
     .ip-category-form > div {

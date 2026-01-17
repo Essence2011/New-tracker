@@ -6,7 +6,6 @@
     <title>Админ Панель - Современный Веб-Портал</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="admin-styles.css">
-    <link rel="icon" type="image/png" href="https://chatgpt.com/backend-api/estuary/content?id=file_00000000d7fc71f4961d1ad92970d90e&ts=491291&p=fs&cid=1&sig=b22448503527cbb7fd73b536d178f9b5ea2110f42b08c7c38fdfdb3d3c1d1e47&v=0">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -17,12 +16,16 @@
             <form id="login-form">
                 <div class="form-group">
                     <label for="password">Пароль</label>
-                    <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+                        <button type="button" class="password-toggle" id="toggle-password">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" class="submit-btn">ВОЙТИ</button>
                 <p id="error-message" class="error-message"></p>
             </form>
-            <a href="index.html" class="back-link">← Вернуться на сайт</a>
         </div>
     </div>
 
@@ -76,12 +79,13 @@
 
                 <div id="visits-tab" class="tab-content active">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                        <h2 class="section-title" style="margin: 0;">Последние Посещения</h2>
+                        <h2 class="section-title" style="margin: 0;">Все Посещения</h2>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button id="clean-duplicates" class="delete-btn">🧹 Удалить дубликаты</button>
-                            <button id="clean-old-visits" class="delete-btn">⏰ Удалить старые (>30 дней)</button>
                             <button id="clear-all-visits" class="delete-btn danger-btn">🗑️ Очистить всё</button>
                         </div>
+                    </div>
+                    <div class="filter-info" style="margin-bottom: 15px; color: var(--text-muted); font-size: 14px;">
+                        Показаны все записи о посещениях
                     </div>
                     <div class="table-container">
                         <table class="data-table">

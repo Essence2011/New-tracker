@@ -20,6 +20,21 @@ const database = getDatabase(app);
 // Password
 const ADMIN_PASSWORD = "Leonardo75";
 
+// Password toggle functionality
+const togglePassword = document.getElementById('toggle-password');
+const passwordInput = document.getElementById('password');
+
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle eye icon
+        const eyeIcon = togglePassword.querySelector('.eye-icon');
+        eyeIcon.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+}
+
 // Check if logged in
 function checkAuth() {
     return sessionStorage.getItem('adminLoggedIn') === 'true';
@@ -139,90 +154,7 @@ document.getElementById('clear-all-visits')?.addEventListener('click', () => {
     });
 });
 
-// Clean duplicate visits (same IP within 30 minutes)
-document.getElementById('clean-duplicates')?.addEventListener('click', () => {
-    showConfirmModal('Удалить повторные посещения с одного IP (в пределах 30 минут)?', async () => {
-        try {
-            const visitsRef = ref(database, 'visits');
-            const snapshot = await get(visitsRef);
-            
-            if (!snapshot.exists()) {
-                alert('Нет данных для очистки');
-                return;
-            }
-            
-            const visits = [];
-            snapshot.forEach((child) => {
-                visits.push({ key: child.key, ...child.val() });
-            });
-            
-            // Sort by timestamp
-            visits.sort((a, b) => a.timestamp - b.timestamp);
-            
-            const seen = new Map();
-            const toDelete = [];
-            
-            visits.forEach(visit => {
-                const key = `${visit.ip}_${visit.page}`;
-                const lastVisit = seen.get(key);
-                
-                if (lastVisit && (visit.timestamp - lastVisit.timestamp) < 30 * 60 * 1000) {
-                    // Duplicate within 30 minutes
-                    toDelete.push(visit.key);
-                } else {
-                    seen.set(key, visit);
-                }
-            });
-            
-            // Delete duplicates
-            for (const key of toDelete) {
-                await remove(ref(database, `visits/${key}`));
-            }
-            
-            alert(`Удалено ${toDelete.length} дубликатов`);
-        } catch (error) {
-            console.error('Error cleaning duplicates:', error);
-            alert('Ошибка при очистке');
-        }
-    });
-});
-
-// Clean old visits (older than 30 days)
-document.getElementById('clean-old-visits')?.addEventListener('click', () => {
-    showConfirmModal('Удалить все записи старше 30 дней?', async () => {
-        try {
-            const visitsRef = ref(database, 'visits');
-            const snapshot = await get(visitsRef);
-            
-            if (!snapshot.exists()) {
-                alert('Нет данных для очистки');
-                return;
-            }
-            
-            const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-            const toDelete = [];
-            
-            snapshot.forEach((child) => {
-                const visit = child.val();
-                if (visit.timestamp < thirtyDaysAgo) {
-                    toDelete.push(child.key);
-                }
-            });
-            
-            // Delete old visits
-            for (const key of toDelete) {
-                await remove(ref(database, `visits/${key}`));
-            }
-            
-            alert(`Удалено ${toDelete.length} старых записей`);
-        } catch (error) {
-            console.error('Error cleaning old visits:', error);
-            alert('Ошибка при очистке');
-        }
-    });
-});
-
-// Load visits data
+// Load visits data - ПОКАЗЫВАЕТ ВСЕ ЗАПИСИ БЕЗ ОГРАНИЧЕНИЙ
 let allVisitsData = {};
 
 function loadVisits() {
@@ -254,9 +186,9 @@ function loadVisits() {
         // Update stats
         updateStats(visitsArray);
         
-        // Update table
+        // Update table - ПОКАЗЫВАЕМ ВСЕ ЗАПИСИ (убрал .slice(0, 100))
         const tableBody = document.getElementById('visits-table-body');
-        tableBody.innerHTML = sortedVisits.slice(0, 100).map(visit => {
+        tableBody.innerHTML = sortedVisits.map(visit => {
             const date = new Date(visit.timestamp);
             const formattedDate = date.toLocaleDateString('ru-RU', {
                 day: '2-digit',
@@ -265,7 +197,8 @@ function loadVisits() {
             });
             const formattedTime = date.toLocaleTimeString('ru-RU', {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             });
             
             const device = getDeviceType(visit.userAgent);
@@ -280,12 +213,18 @@ function loadVisits() {
                     <td>${device}</td>
                     <td>
                         <button class="delete-btn" onclick="window.deleteVisitItem('${visit.key}')">
-                            🗑️ Удалить
+                            🗑️
                         </button>
                     </td>
                 </tr>
             `;
         }).join('');
+        
+        // Update filter info
+        const filterInfo = document.querySelector('.filter-info');
+        if (filterInfo) {
+            filterInfo.textContent = `Показано записей: ${sortedVisits.length} из ${sortedVisits.length}`;
+        }
         
         // Update analytics
         updateAnalytics(visitsArray);
